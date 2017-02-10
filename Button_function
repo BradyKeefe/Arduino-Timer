@@ -1,7 +1,7 @@
 # Arduino-Timer
 
 unsigned long Timer = 5000;
-const int ButtonA = 13;
+const int ButtonA = 13; // Assigning buttons to different pins on Arduino
 const int ButtonB = 12;
 const int ButtonC = 9;
 const int ButtonD = 7;
