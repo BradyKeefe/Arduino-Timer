@@ -1,0 +1,81 @@
+# Arduino-Timer
+
+unsigned long Timer = 5000;
+const int ButtonA = 13;
+const int ButtonB = 12;
+const int ButtonC = 9;
+const int ButtonD = 7;
+const int Relay = 4;
+
+int valA = 0;
+int valB = 0;
+int valC = 0;
+int valD = 0;
+
+int old_valA = 0;
+int old_valB = 0;
+int old_valC = 0;
+int old_valD = 0;
+
+int state = 0;
+unsigned long originalTimer = 0;
+
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  pinMode(ButtonA, INPUT);
+  pinMode(ButtonB, INPUT);
+  pinMode(ButtonC, INPUT);
+  pinMode(ButtonD, INPUT);
+  pinMode(Relay, OUTPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  valA = digitalRead(ButtonA);
+  valB = digitalRead(ButtonB);
+  valC = digitalRead(ButtonC);
+  valD = digitalRead(ButtonD);
+  
+
+  if((valA == HIGH) && (old_valA == LOW)){
+    Timer = Timer + 500;
+    delay(20);
+    Serial.println(Timer);
+  }
+
+  old_valA = valA;
+
+  
+
+  if((valB == HIGH) && (old_valB == LOW)){
+    Timer = Timer - 500;
+    delay(20);
+    Serial.println(Timer);
+  }
+
+  old_valB = valB;
+
+  if((valC == HIGH) && (old_valC == LOW)){
+    digitalWrite(Relay, HIGH);
+    Timer = Timer + millis();
+    state = 1;
+    delay(20);
+  }
+
+  old_valC = valC;
+
+  if((state == 1) && (millis() >= Timer)){
+    digitalWrite(Relay, LOW);
+    state = 0;
+    Timer = originalTimer;
+  }
+
+  if((valD == HIGH) && (old_valD == LOW)){
+    digitalWrite(Relay, HIGH);
+    delay(20);
+  }
+
+  old_valD = valD;
+}
