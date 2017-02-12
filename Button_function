@@ -1,18 +1,18 @@
 # Arduino-Timer
 
 unsigned long Timer = 5000;
-const int ButtonA = 13; // Assigning buttons to different pins on Arduino
+const int ButtonA = 13;           // Assigning buttons to different pins on Arduino
 const int ButtonB = 12;
 const int ButtonC = 9;
 const int ButtonD = 7;
 const int Relay = 4;
 
-int valA = 0;
+int valA = 0;                     // Initializing the values of those buttons to off
 int valB = 0;
 int valC = 0;
 int valD = 0;
 
-int old_valA = 0;
+int old_valA = 0;                // create variables to track the state of the buttons from moment to moment
 int old_valB = 0;
 int old_valC = 0;
 int old_valD = 0;
@@ -28,7 +28,7 @@ void setup() {
   pinMode(ButtonB, INPUT);
   pinMode(ButtonC, INPUT);
   pinMode(ButtonD, INPUT);
-  pinMode(Relay, OUTPUT);
+  pinMode(Relay, OUTPUT);  // relay controls power to the coffee grinder
 }
 
 void loop() {
@@ -40,8 +40,8 @@ void loop() {
   
 
   if((valA == HIGH) && (old_valA == LOW)){
-    Timer = Timer + 500;
-    delay(20);
+    Timer = Timer + 500;            // button A adds .5 seconds to timer
+    delay(20);                      // delay plus old_valA insures that the button doesnt "bounce" and confuse the code
     Serial.println(Timer);
   }
 
@@ -50,7 +50,7 @@ void loop() {
   
 
   if((valB == HIGH) && (old_valB == LOW)){
-    Timer = Timer - 500;
+    Timer = Timer - 500;                    // button B subtracts .5 seconds from timer
     delay(20);
     Serial.println(Timer);
   }
@@ -58,21 +58,21 @@ void loop() {
   old_valB = valB;
 
   if((valC == HIGH) && (old_valC == LOW)){
-    digitalWrite(Relay, HIGH);
-    Timer = Timer + millis();
-    state = 1;
+    digitalWrite(Relay, HIGH);             // If button c is pressed, turn on relay
+    Timer = Timer + millis();              // set variable timer to whatever timer has been adjusted to plus time stamp
+    state = 1;                            // set variable state to 1 (meaning relay is on)
     delay(20);
   }
 
   old_valC = valC;
 
-  if((state == 1) && (millis() >= Timer)){
+  if((state == 1) && (millis() >= Timer)){      //If timer is on and new time stamp passes timer value turn relay off
     digitalWrite(Relay, LOW);
-    state = 0;
-    Timer = originalTimer;
+    state = 0;                                  // record state of timer to off again
+    Timer = originalTimer;                      // reset timer to original value after being used
   }
 
-  if((valD == HIGH) && (old_valD == LOW)){
+  if((valD == HIGH) && (old_valD == LOW)){      // Button D just turns on relay as long as its being held down
     digitalWrite(Relay, HIGH);
     delay(20);
   }
